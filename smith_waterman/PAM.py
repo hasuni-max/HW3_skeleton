@@ -3,10 +3,6 @@ from math import log10
 
 class PAM(object):
 
-    """Following in the footsteps of Margaret Dayhoff, we create a PAM matrices of arbitrary evolutionary
-    distance and create a dict useful for scoring alignments in the Smith-Waterman or Blast algorithms
-    """
-
     def __init__(self, N=250, filename='../PAM1.txt', aa_frequencies=None):
 
         self.PAM = {}
