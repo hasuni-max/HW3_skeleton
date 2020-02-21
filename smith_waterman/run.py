@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
 	# Make ROC curves. Run once with normalize False and True
 	matrices = ["BLOSUM50","BLOSUM62","PAM100","PAM250"]
-	thresholds = [0,15,30,50,70,90,110,130,150,170,190,210,230,250,500]
+	thresholds = [0,10,15,30,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,230,250,500]
 	#thresholds = [.1,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.2,2.4]
 	gap_p = -8
 	gap_e = -3
@@ -123,8 +123,7 @@ if __name__ == "__main__":
 			
 			tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
 				threshold,gap_p,gap_e,matrix_dict, normalize = False)
-			# print(tp,fp)
-			#print(tp,fp)
+
 			r.add_rates(tp,fp)
 		r.plot_ROC(lab=matrix)
 		r.new_curve()

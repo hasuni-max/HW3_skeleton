@@ -4,8 +4,7 @@ from read_PAM import read_matrix
 
 class local_alignment (object):
     """  
-        local_alignment takes a query string and a search string and uses
-        a version of the Smith-Waterman algorithm supporting gaps to find regions of alignment between the two.
+        local_alignment obviously my doods
     """
 
     def __init__(self, query, target, gap_penalty=-5, gap_extension=-2, score_dict=None):
@@ -29,12 +28,12 @@ class local_alignment (object):
 
         return
 
-    def score(self):    # This method performs SW scoring and returns a string describing the resulting alignment
+    def score(self):    
 
         highscore = high_i = high_j = 0       # highest scores encountered so far in the matrix
 
-        best_q_alignment = []  # Keep track of best for the query sequence
-        best_t_alignment = []  # Keep track of best for the target sequence 
+        best_q_alignment = []  
+        best_t_alignment = []  
 
         for i in range(self.querylen):  # score the left edge
 
@@ -70,7 +69,7 @@ class local_alignment (object):
                     query_gap_score = self.table[i - 1][j] + self.gap_penalty     # in either the target or query
 
                 best_score = max(
-                    (0, (0, 0)),                        # a 0 score will never have a traceback
+                    (0, (0, 0)),                        # 0 score will never have a traceback
                     (matchscore, (1, 1)),               # A match corresponds to a -1,-1 traceback
                     (target_gap_score, (0, 1)),         # A target gap corresponds to a 0, -1 traceback
                     (query_gap_score, (1, 0))           # A query gap corresponds to a -1, 0 traceback
@@ -94,7 +93,7 @@ class local_alignment (object):
                                                     # "low road" would be >=
 
                     highscore = self.table[i][j]    # record the new high score
-                    high_i = i                      # also record the i and j positions associated with that score
+                    high_i = i                      
                     high_j = j
 
 
@@ -127,24 +126,24 @@ class local_alignment (object):
         best_q_alignment.reverse()  # flip 'em both once we are done, since we built them "end-to-beginning"
         best_t_alignment.reverse()
 
-        return_string = '\nBest alignment had a score of ' + str(highscore) + ' and is:\n\nTarget:\t' + \
+        out_string = '\nAlignment score ' + str(highscore) + ' and is:\n\nTarget:\t' + \
             str(j + 2) + '\t' + ''.join(best_t_alignment) + '\n\t\t\t'
 
         for k in range(len(best_t_alignment)):     # t and q alignments should be the same length!
 
             if best_t_alignment[k] == best_q_alignment[k]:
 
-                return_string += ''    # Only put a bar if the two characters are identical at this position
+                out_string += ''    # Only put a bar if the two characters are identical at this position
 
             else:
 
-                return_string += ' '    # otherwise just insert a space
+                out_string += ' '    # otherwise just insert a space
 
-        return_string += '\nQuery:\t' + str(i + 2) + '\t' + ''.join(best_q_alignment) + '\n'
+        out_string += '\nQuery:\t' + str(i + 2) + '\t' + ''.join(best_q_alignment) + '\n'
 
 
         #print(highscore)
-        #return return_string
+        #return out_string
         return highscore
 
     def __str__(self):                         
@@ -179,12 +178,11 @@ if __name__ == "__main__":
 
     BLOSUM62 = read_matrix("../BLOSUM62")
 
-    ah3 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
+    seq1 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
 
-    ah4 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
-    #A = smithwaterman("DDMEVIGTAYNPDVLVLDIIMPHLDGLAV", "LVSMLESYVAAPDLILLDIMMPGMDGLEL",1,-2,-4,PAM1) #pass dictionary
+    seq2 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
     
-    A = local_alignment(ah3, ah4,-11,-1,BLOSUM62) #pass dictionary
+    A = local_alignment(seq1, seq2,-8,-3,BLOSUM62) #pass dictionary
 
     print(A.score())
 
