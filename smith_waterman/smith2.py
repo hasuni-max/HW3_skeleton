@@ -53,11 +53,10 @@ class local_alignment (object):
         for i in range(1, self.querylen):      # start these iterations from 1, not 0, as we have already done edges
 
             for j in range(1, self.targetlen):
-
+                #i = 2 and j = 2
                 queryword = self.query[i: i + 1]  # An array slice is perhaps more natural in python than a substring
                 targetword = self.target[j: j + 1]
 
-                #CHANGED
                 increment = self.score_dict[(queryword,targetword)]
 
                 matchscore = self.table[i - 1][j - 1] + increment   # increment will contain either a positive reward
@@ -78,9 +77,9 @@ class local_alignment (object):
 
                 )
 
-                if target_gap_score == best_score:
+                if target_gap_score == best_score[0]:
                     prev_t_gap = True
-                elif query_gap_score == best_score:
+                elif query_gap_score == best_score[0]:
                     prev_q_gap = True
                 else:
                     prev_t_gap = False
@@ -185,7 +184,7 @@ if __name__ == "__main__":
     ah4 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
     #A = smithwaterman("DDMEVIGTAYNPDVLVLDIIMPHLDGLAV", "LVSMLESYVAAPDLILLDIMMPGMDGLEL",1,-2,-4,PAM1) #pass dictionary
     
-    A = local_alignment(ah3, ah4,-8,-3,BLOSUM62) #pass dictionary
+    A = local_alignment(ah3, ah4,-11,-1,BLOSUM62) #pass dictionary
 
     print(A.score())
 

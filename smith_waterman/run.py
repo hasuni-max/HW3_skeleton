@@ -60,7 +60,7 @@ def find_best_gaps(pos_matches,neg_matches,sequences):
 
 	"""
 	BLOSUM50 = read_matrix("../BLOSUM50")
-	threshold = 125
+	threshold = 115
 	best_fp = 10
 	for gap_p in tq.tqdm(range(1,21,1)): #try each gap penality from 1 to 20
 		for gap_e in range(1,6,1): #try each gap extension from 1 to 5
@@ -68,10 +68,10 @@ def find_best_gaps(pos_matches,neg_matches,sequences):
 
 			if fp < best_fp:
 				best_fp = fp
-				best_gap_p = -gap_p
-				best_gap_e = -gap_e
+				best_gap_p = gap_p
+				best_gap_e = gap_e
 
-	print(best_gap_p,best_gap_e)
+	#print(best_gap_p,best_gap_e)
 	return best_gap_p,best_gap_e
 
 
@@ -109,12 +109,12 @@ if __name__ == "__main__":
 
 
 
-	#Make ROC curves. Run once with normalize False and True
+	# Make ROC curves. Run once with normalize False and True
 	matrices = ["BLOSUM50","BLOSUM62","PAM100","PAM250"]
-	#thresholds = [30,50,70,90,110,130,150,170,190,210,230,250,1000]
-	thresholds = [.1,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.2,2.4]
-	gap_p = -4
-	gap_e = -2
+	thresholds = [0,15,30,50,70,90,110,130,150,170,190,210,230,250,500]
+	#thresholds = [.1,.2,.4,.6,.8,1,1.2,1.4,1.6,1.8,2,2.2,2.4]
+	gap_p = -8
+	gap_e = -3
 	r = roc()
 	for matrix in matrices:
 		matrix_dict = read_matrix("../" + matrix)
@@ -123,15 +123,13 @@ if __name__ == "__main__":
 			
 			tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
 				threshold,gap_p,gap_e,matrix_dict, normalize = False)
+			# print(tp,fp)
 			#print(tp,fp)
 			r.add_rates(tp,fp)
 		r.plot_ROC(lab=matrix)
 		r.new_curve()
 
-	#r.plot_ROC()
-	r.save_plot("Matrix_ROC")
-
-	r.save_plot(matrix + "_ROC")
+	r.save_plot("final_ROC")
 
 
 
