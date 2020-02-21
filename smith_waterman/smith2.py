@@ -126,20 +126,20 @@ class local_alignment (object):
         best_q_alignment.reverse()  # flip 'em both once we are done, since we built them "end-to-beginning"
         best_t_alignment.reverse()
 
-        out_string = '\nAlignment score ' + str(highscore) + ' and is:\n\nTarget:\t' + \
+        self.out_string = '\nAlignment score ' + str(highscore) + ' and is:\n\nTarget:\t' + \
             str(j + 2) + '\t' + ''.join(best_t_alignment) + '\n\t\t\t'
 
         for k in range(len(best_t_alignment)):     # t and q alignments should be the same length!
 
             if best_t_alignment[k] == best_q_alignment[k]:
 
-                out_string += ''    # Only put a bar if the two characters are identical at this position
+               self.out_string += ''    # Only put a bar if the two characters are identical at this position
 
             else:
 
-                out_string += ' '    # otherwise just insert a space
+                self.out_string += ' '    # otherwise just insert a space
 
-        out_string += '\nQuery:\t' + str(i + 2) + '\t' + ''.join(best_q_alignment) + '\n'
+        self.out_string += '\nQuery:\t' + str(i + 2) + '\t' + ''.join(best_q_alignment) + '\n'
 
 
         #print(highscore)
@@ -182,7 +182,9 @@ if __name__ == "__main__":
 
     seq2 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
     
-    A = local_alignment(seq1, seq2,-8,-3,BLOSUM62) #pass dictionary
+    A = local_alignment(seq1, seq2,-11,-1,BLOSUM62) #pass dictionary
 
-    print(A.score())
+    print("Alignment score: ",A.score())
+    print(A.out_string)
+
 
