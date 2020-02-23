@@ -2,7 +2,7 @@ import tqdm as tq
 import numpy as np
 from training_files import grab_pairs, parse_fasta
 from smith2 import local_alignment 
-from read_PAM import read_PAM1, read_optimized_matrix
+from read_PAM import read_optimized_matrix
 from PAM import PAM
 from ROC import roc
 
@@ -92,66 +92,69 @@ if __name__ == "__main__":
 
 
 	############################# nPAM matrices ###############################
-	matrices = []
-	labels = []
-	for n in range(20,320,60):
-		labels.append(str(n))
-		A = PAM(N=n)
-		new_PAM = A.Build_PAMN()
-		matrices.append(adjust_PAM(new_PAM))
-		#break
+	# matrices = []
+	# labels = []
+	# for n in range(20,320,60):
+	# 	labels.append(str(n))
+	# 	A = PAM(N=n)
+	# 	new_PAM = A.Build_PAMN()
+	# 	matrices.append(adjust_PAM(new_PAM))
+	# 	##break
 	
 
 
-	# Make ROC curves. Run once with normalize False and True
-	thresholds = [x for x in range(0,300,10)]
-	gap_p = -8
-	gap_e = -3
-	r = roc()
+	# ## Make ROC curves. Run once with normalize False and True
+	# thresholds = [x for x in range(0,300,10)]
+	# gap_p = -8
+	# gap_e = -3
+	# r = roc()
 
-	for index,matrix in enumerate(matrices):
-		print("Testing",labels[index])
+	# for index,matrix in enumerate(matrices):
+	# 	print("Testing",labels[index])
 
-		for threshold in tq.tqdm(thresholds):#loop over 8 different thresholds
-			# print(threshold)
-			tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
-				threshold,gap_p,gap_e,matrix, normalize = False)
-			# print(tp,fp)
+	# 	for threshold in tq.tqdm(thresholds):#loop over 8 different thresholds
+	# 		## print(threshold)
+	# 		tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
+	# 			threshold,gap_p,gap_e,matrix, normalize = False)
+	# 		## print(tp,fp)
 
-			r.add_rates(tp,fp)
-		r.plot_ROC(lab=labels[index])
-		r.new_curve()
+	# 		r.add_rates(tp,fp)
+	# 	r.plot_ROC(lab=labels[index])
+	# 	r.new_curve()
 
-	r.save_plot("nPAM_ROC")
+	# r.save_plot("nPAM_ROC")
 
 
 
 
 	########################################## LAK #########################################
 
-	ah = read_optimized_matrix("../LAK_optimized")
-	matrices = [ah]
+	# ah = read_optimized_matrix("../LAK_optimized")
+	# matrices = [ah]
 
-	thresholds = [x for x in np.arange(20, 60, 0.2)]
-	gap_p = -11.6
-	gap_e = -5.7
-	r = roc()
+	# thresholds = [x for x in np.arange(20, 60, 0.2)]
+	# gap_p = -11.6
+	# gap_e = -5.7
+	# r = roc()
 
 
-	for index,matrix in enumerate(matrices):
-		print("Testing LAK")
+	# for index,matrix in enumerate(matrices):
+	# 	print("Testing LAK")
 
-		for threshold in tq.tqdm(thresholds):#loop over 8 different thresholds
-			# print(threshold)
-			tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
-				threshold,gap_p,gap_e,matrix, normalize = False)
-			# print(tp,fp)
+	# 	for threshold in tq.tqdm(thresholds):##loop over 8 different thresholds
+	# 		## print(threshold)
+	# 		tp,fp = calculate_tp_fp(pos_matches,neg_matches,sequences,
+	# 			threshold,gap_p,gap_e,matrix, normalize = False)
+	# 		## print(tp,fp)
 
-			r.add_rates(tp,fp)
-		r.plot_ROC(lab="LAK_optimized")
-		r.new_curve()
+	# 		r.add_rates(tp,fp)
+	# 	r.plot_ROC(lab="LAK_optimized")
+	# 	r.new_curve()
 
-	r.save_plot("LAK_optimized")
+	# r.save_plot("LAK_optimized")
+
+
+	print(tq.__version__)
 
 
 	
