@@ -4,14 +4,14 @@ from read_PAM import read_matrix
 
 class local_alignment (object):
     """  
-        local_alignment obviously my doods
+        An object that performs the standard smithwaterman alignment
     """
 
-    def __init__(self, query, target, gap_penalty=-5, gap_extension=-2, score_dict=None):
+    def __init__(self, query, target, gap_p=-5, gap_e=-2, score_dict=None):
 
 
-        self.gap_penalty = gap_penalty
-        self.gap_extension = gap_extension
+        self.gap_p = gap_p 
+        self.gap_e = gap_e
 
         
         self.query = query    
@@ -19,10 +19,19 @@ class local_alignment (object):
 
         self.querylen = len(query)
         self.targetlen = len(target)
-        self.score_dict = score_dict
+        self.score_dict = score_dict #This contains the substitution matrix that we pass when we call the class
 
+
+
+
+        #initialize an empty table with zeros. The table has the dimension querylen X targetlen
+        #This will contain all the scores of the matrix
+        #Will be filled when object method score() is called
         self.table = [[0 for i in range(self.targetlen)] for j in range(self.querylen)]
 
+        #initialize an empty table with zeros. The table has the dimension querylen X targetlen
+        #This will contain all the traceback informaton
+        #Will be filled when object method score() is called
         self.traceback = [[(0, 0) for i in range(self.targetlen)] for j in range(self.querylen)]
 
 
@@ -30,44 +39,63 @@ class local_alignment (object):
 
     def score(self):    
 
-        highscore = high_i = high_j = 0       # highest scores encountered so far in the matrix
+        #These variables keep track of the highest alignment score and its position in the
+        #scoring table and the tracback table. These scors will be updated as the we traverse both sequences 
+        highscore = high_i = high_j = 0       
 
+
+        #Once both sequenes have been traversed and all scoeres have been calculated. 
+        #we loop back through and add amino acids back
         best_q_alignment = []  
         best_t_alignment = []  
 
-        for i in range(self.querylen):  # score the left edge
+
+         # score the left edge. It is easier to do this now. We do the same thing with the right edge
+        for i in range(self.querylen): 
 
 
             self.table[i][0] = self.score_dict[(self.query[i],self.target[0])]
 
+        #score the right edge
         for j in range(self.targetlen):  # score the top edge
 
             self.table[0][j] = self.score_dict[(self.target[j],self.query[0])]
 
 
-        # Nested loop through the remainder of the matrix, scoring as we go
+        #These booleans keep track if we are currently in a gap or not
         prev_t_gap = False
         prev_q_gap = False
 
+        #This is the main body of the code. We simply loop through the strings and score as we go, 
+        #keeping track of the highest score as we go along.
         for i in range(1, self.querylen):      # start these iterations from 1, not 0, as we have already done edges
 
             for j in range(1, self.targetlen):
-                #i = 2 and j = 2
-                queryword = self.query[i: i + 1]  # An array slice is perhaps more natural in python than a substring
+
+                #Current amino acid from query and target
+                queryword = self.query[i: i + 1]  #string slice
                 targetword = self.target[j: j + 1]
 
-                increment = self.score_dict[(queryword,targetword)]
+                increment = self.score_dict[(queryword,targetword)] #grab score from substitution matrix
 
-                matchscore = self.table[i - 1][j - 1] + increment   # increment will contain either a positive reward
-                                                                # or a negative penalty depending on whether we matched
+                #add the increment to the value from the diagonal 
+                matchscore = self.table[i - 1][j - 1] + increment   # The increment from above either has a 
+                #positive or negative reward
+                
+                
+                #This flag keeps track of whether or not we are in a current gap. If so
+                #add gap extension penalty, otherwise use gap openining penalty
                 if prev_t_gap:
-                    target_gap_score = self.table[i][j - 1] + self.gap_extension    # scores associated with gapping
+                    target_gap_score = self.table[i][j - 1] + self.gap_e    # scores associated with gapping
                 elif prev_q_gap:
-                    query_gap_score = self.table[i - 1][j] + self.gap_extension
+                    query_gap_score = self.table[i - 1][j] + self.gap_e
                 else:
-                    target_gap_score = self.table[i][j - 1] + self.gap_penalty    # scores associated with gapping
-                    query_gap_score = self.table[i - 1][j] + self.gap_penalty     # in either the target or query
+                    target_gap_score = self.table[i][j - 1] + self.gap_p    # scores associated with gapping
+                    query_gap_score = self.table[i - 1][j] + self.gap_p     # in either the target or query
 
+                #So this is a nifty Python trick. Basically checks the first index in each tuple and takes the max
+                #The value returned is the tuple associated with the max first index
+                #The nested loops contain values for the traceback table
                 best_score = max(
                     (0, (0, 0)),                        # 0 score will never have a traceback
                     (matchscore, (1, 1)),               # A match corresponds to a -1,-1 traceback
@@ -76,6 +104,8 @@ class local_alignment (object):
 
                 )
 
+                #Update the gap flag. If the best score from previous step was a gap score then set flag to true
+                #else we set flag to false
                 if target_gap_score == best_score[0]:
                     prev_t_gap = True
                 elif query_gap_score == best_score[0]:
@@ -85,11 +115,13 @@ class local_alignment (object):
                     prev_q_gap = False
                     
 
-                self.table[i][j] = best_score[0]    # The first element in the tuple is the actual score to be recorded
-                self.traceback[i][j] = best_score[1]    # The traceback offsets associated with the score are in a tuple
+                #Update the scoring table and the traceback table 
+                self.table[i][j] = best_score[0]    # The first element in the tuple is the best score and added to the table
+                self.traceback[i][j] = best_score[1]   #Second element is the tuple with the traceback back values 
 
-
-                if self.table[i][j] > highscore:    # This represents the "high road" approach.
+                #If the current position in the table is greater than the highscore
+                #If so update highscore and highscore positions
+                if self.table[i][j] > highscore:   
                                                     # "low road" would be >=
 
                     highscore = self.table[i][j]    # record the new high score
@@ -97,9 +129,11 @@ class local_alignment (object):
                     high_j = j
 
 
+        #Loop has finished. Set i and j to the indices associated with the highest scores
         i = high_i          
         j = high_j
 
+        #This loop grabs the sequence associated with the best alignment
         while self.table[i][j] and i > -1 and j > -1:
 
             i_offset, j_offset = self.traceback[i][j]       # unpack the offset tuples stored in the traceback table
@@ -123,9 +157,13 @@ class local_alignment (object):
             if i == 0 or j == 0:
                 break
 
-        best_q_alignment.reverse()  # flip 'em both once we are done, since we built them "end-to-beginning"
+        #Reverse the sequences 
+        best_q_alignment.reverse()  
         best_t_alignment.reverse()
 
+
+        #The rest of the method creates a nicely formatteed alignment output string. This can be printed
+        #for an obect n by typing n.out_string
         self.out_string = '\nAlignment score ' + str(highscore) + ' and is:\n\nTarget:\t' + \
             str(j + 2) + '\t' + ''.join(best_t_alignment) + '\n\t\t\t'
 
@@ -146,7 +184,11 @@ class local_alignment (object):
         #return out_string
         return highscore
 
-    def __str__(self):                         
+    def __str__(self):
+
+        """
+            This class has a string attribute that will print the scoring table and the traceback table
+        """                     
         lineout = 'Scoring table:\n\t' + '\t'.join(self.target) + '\n'
         # # The above is just a fancy looking way to break the target string into tab-delimited individual characters
 
@@ -185,6 +227,6 @@ if __name__ == "__main__":
     A = local_alignment(seq1, seq2,-11,-1,BLOSUM62) #pass dictionary
 
     print("Alignment score: ",A.score())
-    print(A.out_string)
+
 
 

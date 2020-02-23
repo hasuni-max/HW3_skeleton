@@ -3,6 +3,10 @@ from math import log10
 
 class PAM(object):
 
+    """
+        This class calculates multiples of a PAM matrix starting with a PAM1. 
+    """
+
     def __init__(self, N=250, filename='../PAM1.txt', aa_frequencies=None):
 
         self.PAM = {}
@@ -10,6 +14,7 @@ class PAM(object):
         self.N = N                    # The evolutionary distance of the PAM matrix we desire
         self.filename = filename      
 
+        #These are background AA frequencies found on the internet. I am not sure if these values are accurate 
         if aa_frequencies is None:
 
             self.aa_frequencies = {"G": 0.089, "R": 0.041, "A": 0.087, "N": 0.040, "L": 0.085, "F": 0.040, "K": 0.081,
@@ -21,7 +26,7 @@ class PAM(object):
 
     def Build_PAMN(self):
 
-        PAM1, alphabet = self.__read_PAM1()       # Read in the PAM1 file
+        PAM1, alphabet = self.read_PAM1()       # Read in the PAM1 file
 
         size = len(alphabet)  # Record how many aa were in the input file
         # Some PAM table include ambiguity characters, so we cannot assume 20
@@ -29,8 +34,10 @@ class PAM(object):
         PAM1 = [[element / 10000 for element in row] for row in PAM1]
 
 
-        PAMN = list(PAM1)       
+        PAMN = list(PAM1)    
 
+
+        #Keep multiplying matrix until N - 1.... we subtract one because we start with PAM1
         for i in range(self.N - 1):  
 
             PAMN = self.__MatrixMultiply(PAMN, PAM1)
@@ -45,18 +52,18 @@ class PAM(object):
 
         return self.PAM
 
-    def __read_PAM1(self):
+    def read_PAM1(self):
 
         """Read in the raw PAM1 file into a two-dimensional list"""
 
         PAM1 = []       
 
-        with open(self.filename, 'rU') as pam1_file:
+        with open(self.filename, 'r') as pam1_file:
 
             line = pam1_file.readline()  
             line = line.strip()          
 
-            alphabet = line.split('\t')
+            alphabet = line.split(' ')
 
             del alphabet[0]   
             line = pam1_file.readline()    
@@ -64,7 +71,7 @@ class PAM(object):
             while line:
 
                 line = line.strip()                             
-                line = line.split('\t')                         
+                line = line.split(' ')                         
                 del line[0]                                     
                 line = [int(element) for element in line]       
                 PAM1.append(line)
@@ -76,7 +83,7 @@ class PAM(object):
 
         """Print out the final scoring dict we have created. """
 
-        ordered_symbols = self.aa_frequencies.keys()        # If I was a bit less lazy I would get this from alphabet
+        ordered_symbols = self.aa_frequencies.keys()       
         ordered_symbols.sort()
 
         for aa in ordered_symbols:
@@ -117,7 +124,8 @@ def main():
     A = PAM(N=200)
     print(A.Build_PAMN())
 
-    A.PAM_dump()
+
+    #A.PAM_dump()
 
 if __name__ == '__main__':
 

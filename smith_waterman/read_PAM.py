@@ -27,6 +27,37 @@ def read_matrix(filename):
 
 	return scoring_dict
 
+def read_optimized_matrix(filename):
+
+	scoring_dict = {}
+	flag = False
+	AA = "ARNDCQEGHILKMFPSTWYV"
+	with open(filename) as fh:
+		for line in fh:
+			line = line.strip()
+
+			line = line.split(" ")
+			aa = line[0]
+			values = [float(x) for x in line[1::]]
+
+			for index,value in enumerate(values):
+				#print(index,value)
+				scoring_dict[(aa,AA[index])] = float(value)
+				scoring_dict[(AA[index],aa)] = float(value)
+				scoring_dict[("X",aa)] = -1
+				scoring_dict[(aa,"X")] = -1
+				scoring_dict[("X","X")] = -1
+
+				scoring_dict[("B",aa)] = -1
+				scoring_dict[(aa,"B")] = -1
+				scoring_dict[("B","B")] = -1
+
+				scoring_dict[("Z",aa)] = -1
+				scoring_dict[(aa,"Z")] = -1
+				scoring_dict[("Z","Z")] = -1
+
+	return scoring_dict
+
 if __name__ == "__main__":
 	print(read_matrix("../BLOSUM62"))
 
