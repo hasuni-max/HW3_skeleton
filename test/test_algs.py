@@ -2,9 +2,26 @@ import numpy as np
 import tqdm as tq
 import os
 import matplotlib.pyplot as plt
-from smith_waterman import training_files, smith2, read_PAM, ROC, PAM,optimization
+from smith_waterman import training_files, smith2, read_PAM, ROC, PAM, optimization
 
 def test_roc():
+
+	pos_matches = []
+	all_files = []
+	for file in training_files.grab_pairs("Pospairs.txt"):
+		pos_matches.append(file)
+		all_files.append(file[0])
+		all_files.append(file[1])
+
+	neg_matches = []
+	for file in training_files.grab_pairs("Negpairs.txt"):
+		neg_matches.append(file)
+		all_files.append(file[0])
+		all_files.append(file[1])
+
+	all_files = set(all_files)
+
+	sequences = {file:training_files.parse_fasta("../"+file) for file in all_files}
 
 	filepath = os.path.join("LAK_optimized")
 
