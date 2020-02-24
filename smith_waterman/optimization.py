@@ -1,7 +1,7 @@
 import tqdm as tq
 import numpy as np
 from .training_files import grab_pairs, parse_fasta
-from .smith2 import local_alignment 
+from .smith3 import local_alignment 
 from .read_PAM import read_optimized_matrix
 from .PAM import PAM
 from .ROC import roc

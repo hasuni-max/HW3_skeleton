@@ -2,7 +2,7 @@ import numpy as np
 import tqdm as tq
 import os
 import matplotlib.pyplot as plt
-from smith_waterman import training_files, smith2, read_PAM, ROC, PAM, optimization
+from smith_waterman import training_files, smith3, read_PAM, ROC, PAM, optimization
 
 def test_roc():
 
@@ -28,7 +28,7 @@ def test_roc():
 	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
 
-	thresholds = [x for x in np.arange(20, 22, 0.2)]
+	thresholds = [x for x in np.arange(20, 21, 0.2)]
 	gap_p = -11.6
 	gap_e = -5.7
 	r = ROC.roc()
@@ -45,12 +45,6 @@ def test_roc():
 				threshold,gap_p,gap_e,matrix, normalize = False)
 			tps.append(tp)
 			fps.append(fp)
-			## print(tp,fp)
-
-			#r.add_rates(tp,fp)
-		#r.plot_ROC(lab="Test")
-		#r.new_curve()
-
 
 	assert len(tps) == len(fps)
 
@@ -63,17 +57,20 @@ def test_smithwaterman():
 
 	seq2 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
 	
-	A = smith2.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
+	A = smith3.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
 	assert A.score() > 0
 
 def test_perfect_alignment():
+
+
+
 	BLOSUM50 = read_PAM.read_matrix("BLOSUM50")
     
 	seq1 = "LSCSKCRKEMGQVEISS"
 
 	seq2 = "LSCSKCRKEMGQVEISS"
 	
-	A = smith2.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
+	A = smith3.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
 	assert A.score() > 0
 
 def test_scoring():

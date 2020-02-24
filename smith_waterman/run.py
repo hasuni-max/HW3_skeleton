@@ -1,6 +1,6 @@
 import tqdm as tq
 from training_files import grab_pairs, parse_fasta
-from smith2 import local_alignment 
+from smith3 import local_alignment 
 from read_PAM import read_matrix
 from ROC import roc
 
