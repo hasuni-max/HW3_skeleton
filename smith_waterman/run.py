@@ -30,7 +30,7 @@ def calculate_tp_fp(pos_matches,neg_matches,sequences,threshold,gap_p,gap_e,matr
 			score = score/min(len(sequences[pos[1]]),len(sequences[pos[0]]))
 			#print(score)
 		#print(score,threshold)
-		if score >= threshold:
+		if score > threshold:
 			true_pos += 1
 		else:
 			false_neg += 1	
