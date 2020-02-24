@@ -1,11 +1,14 @@
 import numpy as np
 import tqdm as tq
+import os
 import matplotlib.pyplot as plt
 from smith_waterman import training_files, smith2, read_PAM, ROC, PAM,optimization
 
 def test_roc():
 
-	ah = read_PAM.read_optimized_matrix("HW3_skeleton/LAK_optimized")
+	filepath = os.path.join("HW3_skeleton", "LAK_optimized")
+
+	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
 
 	thresholds = [x for x in np.arange(20, 60, 0.2)]
@@ -37,7 +40,7 @@ def test_roc():
 
 def test_smithwaterman():
 
-	BLOSUM50 = read_matrix("HW3_skeleton/BLOSUM50")
+	BLOSUM50 = read_PAM.read_matrix("HW3_skeleton/BLOSUM50")
     
 	seq1 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
 
