@@ -21,7 +21,7 @@ def test_roc():
 
 	all_files = set(all_files)
 
-	sequences = {file:training_files.parse_fasta("../"+file) for file in all_files}
+	sequences = {file:training_files.parse_fasta("sequences/"+file) for file in all_files}
 
 	filepath = os.path.join("LAK_optimized")
 
@@ -63,7 +63,7 @@ def test_smithwaterman():
 
 	seq2 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
 	
-	A = smith_waterman.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
+	A = smith2.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
 	assert A.score() > 0
 
 def test_scoring():
