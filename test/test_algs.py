@@ -39,8 +39,9 @@ def test_roc():
 
 
 def test_smithwaterman():
+	filepath = os.path.join("HW3_skeleton", "BLOSUM50")
 
-	BLOSUM50 = read_PAM.read_matrix("HW3_skeleton/BLOSUM50")
+	BLOSUM50 = read_PAM.read_matrix(filepath)
     
 	seq1 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
 
