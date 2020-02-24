@@ -21,7 +21,7 @@ def test_roc():
 
 	all_files = set(all_files)
 
-	sequences = {file:training_files.parse_fasta("sequences/"+file) for file in all_files}
+	sequences = {file:training_files.parse_fasta(file) for file in all_files}
 
 	filepath = os.path.join("LAK_optimized")
 
