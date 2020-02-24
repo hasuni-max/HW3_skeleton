@@ -1,4 +1,4 @@
-from PAM import PAM
+from .PAM import PAM
 from read_PAM import read_matrix
 
 
