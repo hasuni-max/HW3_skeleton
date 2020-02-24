@@ -1,5 +1,5 @@
 from .PAM import PAM
-from read_PAM import read_matrix
+from .read_PAM import read_matrix
 
 
 class local_alignment (object):
