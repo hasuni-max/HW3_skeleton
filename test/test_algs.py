@@ -28,7 +28,7 @@ def test_roc():
 	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
 
-	thresholds = [x for x in np.arange(20, , 0.2)]
+	thresholds = [x for x in np.arange(20, 25, 0.2)]
 	gap_p = -11.6
 	gap_e = -5.7
 	r = ROC.roc()
