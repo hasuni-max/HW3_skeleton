@@ -28,7 +28,7 @@ def test_roc():
 	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
 
-	thresholds = [x for x in np.arange(20, 25, 0.2)]
+	thresholds = [x for x in np.arange(20, 22, 0.2)]
 	gap_p = -11.6
 	gap_e = -5.7
 	r = ROC.roc()
@@ -52,7 +52,7 @@ def test_roc():
 		#r.new_curve()
 
 
-	assert len(tp) == len(fp)
+	assert len(tps) == len(fps)
 
 
 def test_smithwaterman():
@@ -62,6 +62,16 @@ def test_smithwaterman():
 	seq1 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
 
 	seq2 = "LSCSKCRKEMGQVEISSCTVDRDTVCGCRKNQYRHYWSENLFQC"
+	
+	A = smith2.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
+	assert A.score() > 0
+
+def test_perfect_alignment():
+	BLOSUM50 = read_PAM.read_matrix("BLOSUM50")
+    
+	seq1 = "LSCSKCRKEMGQVEISS"
+
+	seq2 = "LSCSKCRKEMGQVEISS"
 	
 	A = smith2.local_alignment(seq1, seq2,-11,-1,BLOSUM50)
 	assert A.score() > 0
