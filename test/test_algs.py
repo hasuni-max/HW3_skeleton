@@ -6,7 +6,7 @@ from smith_waterman import training_files, smith2, read_PAM, ROC, PAM,optimizati
 
 def test_roc():
 
-	filepath = os.path.join("HW3_skeleton", "LAK_optimized")
+	filepath = os.path.join("LAK_optimized")
 
 	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
