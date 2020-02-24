@@ -75,8 +75,7 @@ class local_alignment (object):
                 #add the increment to the value from the diagonal 
                 matchscore = self.table[i - 1][j - 1] + increment   # The increment from above either has a 
                 #positive or negative reward
-                
-                
+                         
 
                 #REMOVE FLAG and added this dictionary that keeps track gaps
                 if gapsies.get((i,j-1),0) == 1:

@@ -7,7 +7,7 @@ class PAM(object):
         This class calculates multiples of a PAM matrix starting with a PAM1. 
     """
 
-    def __init__(self, N=250, filename='../PAM1.txt', aa_frequencies=None):
+    def __init__(self, N=250, filename='PAM1.txt', aa_frequencies=None):
 
         self.PAM = {}
        
