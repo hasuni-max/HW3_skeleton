@@ -14,7 +14,7 @@ def test_roc():
 	thresholds = [x for x in np.arange(20, 60, 0.2)]
 	gap_p = -11.6
 	gap_e = -5.7
-	r = roc()
+	r = ROC.roc()
 
 	tps = []
 	fps = []
@@ -39,9 +39,8 @@ def test_roc():
 
 
 def test_smithwaterman():
-	filepath = os.path.join("HW3_skeleton", "BLOSUM50")
 
-	BLOSUM50 = read_PAM.read_matrix(filepath)
+	BLOSUM50 = read_PAM.read_matrix("BLOSUM50")
     
 	seq1 = "MDSVCPQGKYIHPQNNSICCTKCHKGTYLYNDCPGPGQDTDCRECESGSFTASENHLRHC"
 
