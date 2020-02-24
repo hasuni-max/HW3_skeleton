@@ -28,7 +28,7 @@ def test_roc():
 	ah = read_PAM.read_optimized_matrix(filepath)
 	matrices = [ah]
 
-	thresholds = [x for x in np.arange(20, 60, 0.2)]
+	thresholds = [x for x in np.arange(20, , 0.2)]
 	gap_p = -11.6
 	gap_e = -5.7
 	r = ROC.roc()
@@ -47,9 +47,9 @@ def test_roc():
 			fps.append(fp)
 			## print(tp,fp)
 
-			r.add_rates(tp,fp)
-		r.plot_ROC(lab="Test")
-		r.new_curve()
+			#r.add_rates(tp,fp)
+		#r.plot_ROC(lab="Test")
+		#r.new_curve()
 
 
 	assert len(tp) == len(fp)
